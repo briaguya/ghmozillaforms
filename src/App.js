@@ -13,12 +13,23 @@ class App extends Component {
 
   handleSubmit(e) {
     this.setState({newIssueCreated: true});
-    console.log(e);
+    console.log(e.formData);
+    var headers = new Headers();
+    headers.append('Authorization', 'token v1.086ca559d9650859999960e49ef07aa882f44352');
+    headers.append('Content-Type', 'application/vnd.github.v3+json');
+
     fetch('https://api.github.com/repos/briaguya/ghmozillaforms/issues', 
     {
       method: 'POST',
-      body: e.body
+      mode: 'cors',
+      headers: headers,
+      body: JSON.stringify(e.formData)
     }).then(function(response) {
+      console.log(response);
+      response.json().then(function(data) {
+        var blob = data;
+        console.log(blob);
+      });
       console.log(response);
     }
 
@@ -26,9 +37,9 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.newIssueCreated)
     return (
       <div>
+        <button onClick={this.getAuth.bind()}/>
         <Form schema={schema} onSubmit={this.handleSubmit.bind(this)} /> 
         {this.state.newIssueCreated ?
           <div>
